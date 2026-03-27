@@ -1,0 +1,22 @@
+{
+  "name": "zmm_sbc_2703",
+  "version": "1.0.0",
+  "dependencies": {
+    "@sap/cds": "^9"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2.2.0"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "private": true
+
+
+
+}
+
+
+
+
+
