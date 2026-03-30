@@ -1,0 +1,238 @@
+### ─────────────────────────────────────────────
+### SET YOUR BASE URL HERE
+### ─────────────────────────────────────────────
+@baseUrl = http://localhost:4004/odata/v4/material-master
+
+
+### ══════════════════════════════════════════════
+### TEST 1 — READ: Get all materials
+### Expected: 200 OK
+### ══════════════════════════════════════════════
+GET {{baseUrl}}/ZMARA
+
+
+### ══════════════════════════════════════════════
+### TEST 2 — CREATE: Valid material
+### Expected: 201 Created
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA
+Content-Type: application/json
+
+{
+  "MATNR": "601",
+  "MTART": "S",
+  "MBRSH": "MN",
+  "MATKL": "PL",
+  "PSTAT": "R"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 3 — INVALID MTART
+### Expected: 400 Bad Request
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA
+Content-Type: application/json
+
+{
+  "MATNR": "602",
+  "MTART": "X",
+  "MBRSH": "MN",
+  "MATKL": "PL",
+  "PSTAT": "R"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 4 — INVALID MBRSH
+### Expected: 400 Bad Request
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA
+Content-Type: application/json
+
+{
+  "MATNR": "603",
+  "MTART": "S",
+  "MBRSH": "ABC",
+  "MATKL": "PL",
+  "PSTAT": "R"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 5 — INVALID MATKL
+### Expected: 400 Bad Request
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA
+Content-Type: application/json
+
+{
+  "MATNR": "604",
+  "MTART": "S",
+  "MBRSH": "MN",
+  "MATKL": "ZZ",
+  "PSTAT": "R"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 6 — INVALID PSTAT
+### Expected: 400 Bad Request
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA
+Content-Type: application/json
+
+{
+  "MATNR": "605",
+  "MTART": "S",
+  "MBRSH": "MN",
+  "MATKL": "PL",
+  "PSTAT": "Z"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 7 — EMPTY MATNR
+### Expected: 400 Bad Request
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA
+Content-Type: application/json
+
+{
+  "MATNR": "",
+  "MTART": "S",
+  "MBRSH": "MN",
+  "MATKL": "PL",
+  "PSTAT": "R"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 8 — DUPLICATE MATNR
+### Expected: 409 Conflict
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA
+Content-Type: application/json
+
+{
+  "MATNR": "501",
+  "MTART": "S",
+  "MBRSH": "MN",
+  "MATKL": "PL",
+  "PSTAT": "R"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 9 — VALID ZMARC (FK PASS)
+### Expected: 201 Created
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARC
+Content-Type: application/json
+
+{
+  "MATNR": "601",
+  "WERKS": "201",
+  "MMSTA": "W"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 10 — INVALID FK ZMARC
+### Expected: 404 Not Found
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARC
+Content-Type: application/json
+
+{
+  "MATNR": "999",
+  "WERKS": "201",
+  "MMSTA": "W"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 11 — INVALID FK ZMARD
+### Expected: 404 Not Found
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARD
+Content-Type: application/json
+
+{
+  "MATNR": "999",
+  "WERKS": "201",
+  "LGORT": "RM1"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 12 — INVALID MMSTA
+### Expected: 400 Bad Request
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARC
+Content-Type: application/json
+
+{
+  "MATNR": "601",
+  "WERKS": "202",
+  "MMSTA": "X"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 13 — UPDATE MATERIAL
+### Expected: 200 OK
+### ══════════════════════════════════════════════
+PATCH {{baseUrl}}/ZMARA(MATNR='601')
+Content-Type: application/json
+
+{
+  "PSTAT": "U"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 14 — DISPLAY READ
+### Expected: 200 OK
+### ══════════════════════════════════════════════
+GET {{baseUrl}}/ZMARA_Display
+
+
+### ══════════════════════════════════════════════
+### TEST 15 — DISPLAY WRITE BLOCKED
+### Expected: 405 Method Not Allowed
+### ══════════════════════════════════════════════
+POST {{baseUrl}}/ZMARA_Display
+Content-Type: application/json
+
+{
+  "MATNR": "700"
+}
+
+
+### ══════════════════════════════════════════════
+### TEST 16 — FILTER MTART = S
+### Expected: 200 OK
+### ══════════════════════════════════════════════
+GET {{baseUrl}}/ZMARA?$filter=MTART eq 'S'
+
+
+### ══════════════════════════════════════════════
+### TEST 17 — FILTER MBRSH = PH
+### Expected: 200 OK
+### ══════════════════════════════════════════════
+GET {{baseUrl}}/ZMARA?$filter=MBRSH eq 'PH'
+
+
+### ══════════════════════════════════════════════
+### TEST 18 — EXPAND ALL RELATIONS
+### Expected: 200 OK
+### ══════════════════════════════════════════════
+GET {{baseUrl}}/ZMARA?$expand=toZMARC,toZMARD,toZMAKTX
+
+
+### ══════════════════════════════════════════════
+### TEST 19 — DELETE MATERIAL
+### Expected: 204 No Content
+### ══════════════════════════════════════════════
+DELETE {{baseUrl}}/ZMARA(MATNR='601')
